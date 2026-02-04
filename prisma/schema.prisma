@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("USER") // "USER" or "ADMIN"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  orders    Order[]
+  designs   Design[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relaciones
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  categoryId  String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  category   Category    @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model Design {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String
+  userId      String
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  user       User        @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("designs")
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  userId      String
+  total       Float
+  status      String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "CANCELLED"
+  customerName String
+  customerEmail String
+  customerPhone String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  user       User        @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  designId  String?
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  design  Design? @relation(fields: [designId], references: [id])
+
+  @@map("order_items")
+}
+
+model Cotizacion {
+  id                  String   @id @default(cuid())
+  nombreCompleto      String
+  email               String
+  whatsapp            String?
+  cotizacionDirigida  String?
+  tipoCliente         String?
+  urgenciaProyecto    String   @default("Normal (2-3 semanas)")
+  descripcionProyecto String
+  estado              String   @default("PENDIENTE") // "PENDIENTE", "EN_PROCESO", "COMPLETADA", "CANCELADA"
+  fechaCreacion       DateTime @default(now())
+  fechaActualizacion  DateTime @updatedAt
+
+  @@map("cotizaciones")
+}
