@@ -132,7 +132,6 @@ export function AuthButtons() {
       const data = await response.json();
       
       if (response.ok && data.user.role === 'ADMIN') {
-        alert('Acceso de administrador exitoso');
         setAdminLoginOpen(false);
         setLoginForm({ email: "", password: "" });
         // Redirigir al dashboard de admin

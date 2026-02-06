@@ -38,7 +38,7 @@ npm run db:push
 npm run db:seed
 
 # Ejecutar en desarrollo
-npm run dev
+![alt text](image.png)
 ```
 
 ## 🌐 Despliegue en Vercel
