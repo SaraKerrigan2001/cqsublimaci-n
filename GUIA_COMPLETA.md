@@ -82,6 +82,8 @@ El sitio estará disponible en: [http://localhost:3000](http://localhost:3000)
 ---
 
 ## ☁️ Despliegue en Vercel
+**Enlace de Producción:** [https://cqsublimacion-2026-v1.vercel.app](https://vercel.com/maria-paulas-projects-bb7d8614/cqsublimacion_2026-v1)
+
 1. Conectar el repositorio de GitHub a Vercel.
 2. Configurar las **Environment Variables**:
    - `DATABASE_URL="file:./dev.db"`
