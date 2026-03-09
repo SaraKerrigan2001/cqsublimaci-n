@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -83,7 +83,7 @@ model Order {
   customerEmail String
   customerPhone String?
   notes       String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @now()
   updatedAt   DateTime @updatedAt
 
   // Relaciones
