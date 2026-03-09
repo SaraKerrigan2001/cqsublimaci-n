@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,6 +26,8 @@ export function AuthButtons() {
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const [cotizarOpen, setCotizarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Estados para formularios
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -77,15 +79,20 @@ export function AuthButtons() {
       const data = await response.json();
       
       if (response.ok) {
-        alert('Login exitoso');
-        setLoginOpen(false);
+        setError(null);
         setLoginForm({ email: "", password: "" });
-        // Aquí puedes manejar el estado de autenticación
+        
+        // Redirigir según el rol
+        if (data.user.role === 'ADMIN') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/usuario';
+        }
       } else {
-        alert(data.error || 'Error en el login');
+        setError(data.error || 'Error en el login');
       }
     } catch (error) {
-      alert('Error de conexión');
+      setError('Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -105,14 +112,21 @@ export function AuthButtons() {
       const data = await response.json();
       
       if (response.ok) {
-        alert('Registro exitoso');
-        setRegisterOpen(false);
+        setError(null);
+        setSuccess('¡Registro exitoso!');
         setRegisterForm({ name: "", email: "", password: "", role: "USER" });
+        
+        setTimeout(() => {
+          setRegisterOpen(false);
+          setSuccess(null);
+          // Redirigir según el rol (el token ya debería estar en las cookies)
+          window.location.href = registerForm.role === 'ADMIN' ? '/admin' : '/usuario';
+        }, 1500);
       } else {
-        alert(data.error || 'Error en el registro');
+        setError(data.error || 'Error en el registro');
       }
     } catch (error) {
-      alert('Error de conexión');
+      setError('Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -132,19 +146,25 @@ export function AuthButtons() {
       const data = await response.json();
       
       if (response.ok && data.user.role === 'ADMIN') {
-        setAdminLoginOpen(false);
+        setError(null);
         setLoginForm({ email: "", password: "" });
         // Redirigir al dashboard de admin
         window.location.href = '/admin';
       } else {
-        alert('Acceso denegado. Solo administradores.');
+        setError('Acceso denegado. Solo administradores.');
       }
     } catch (error) {
-      alert('Error de conexión');
+      setError('Error de conexión');
     } finally {
       setLoading(false);
     }
   };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCotizar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,8 +179,8 @@ export function AuthButtons() {
       });
 
       if (response.ok) {
-        alert('Cotización enviada exitosamente. Te contactaremos pronto.');
-        setCotizarOpen(false);
+        setSuccess('Cotización enviada exitosamente. Te contactaremos pronto.');
+        setError(null);
         setCotizarForm({
           nombreCompleto: "",
           email: "",
@@ -170,15 +190,21 @@ export function AuthButtons() {
           urgenciaProyecto: "Normal (2-3 semanas)",
           descripcionProyecto: ""
         });
+        setTimeout(() => {
+          setCotizarOpen(false);
+          setSuccess(null);
+        }, 3000);
       } else {
-        alert('Error al enviar la cotización. Intenta nuevamente.');
+        setError('Error al enviar la cotización. Intenta nuevamente.');
       }
     } catch (error) {
-      alert('Error de conexión. Intenta nuevamente.');
+      setError('Error de conexión. Intenta nuevamente.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (!mounted) return null;
 
   return (
     <>
@@ -194,13 +220,21 @@ export function AuthButtons() {
           <DropdownMenuContent className="bg-gray-900 border-gray-700">
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => setLoginOpen(true)}
+              onClick={() => {
+                setError(null);
+                setSuccess(null);
+                setLoginOpen(true);
+              }}
             >
               Iniciar Sesión
             </DropdownMenuItem>
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => setRegisterOpen(true)}
+              onClick={() => {
+                setError(null);
+                setSuccess(null);
+                setRegisterOpen(true);
+              }}
             >
               Registrarse
             </DropdownMenuItem>
@@ -218,7 +252,11 @@ export function AuthButtons() {
           <DropdownMenuContent className="bg-gray-900 border-gray-700">
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => setAdminLoginOpen(true)}
+              onClick={() => {
+                setError(null);
+                setSuccess(null);
+                setAdminLoginOpen(true);
+              }}
             >
               Acceso Admin
             </DropdownMenuItem>
@@ -228,7 +266,11 @@ export function AuthButtons() {
         {/* Botón Cotizar original */}
         <button 
           className="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
-          onClick={() => setCotizarOpen(true)}
+          onClick={() => {
+            setError(null);
+            setSuccess(null);
+            setCotizarOpen(true);
+          }}
         >
           Cotizar
         </button>
@@ -243,12 +285,20 @@ export function AuthButtons() {
               Ingresa tus credenciales para acceder a tu cuenta
             </DialogDescription>
           </DialogHeader>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <Label htmlFor="login-email">Email</Label>
               <Input
                 id="login-email"
                 type="email"
+                placeholder="ejemplo@correo.com"
                 value={loginForm.email}
                 onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                 required
@@ -259,6 +309,7 @@ export function AuthButtons() {
               <Input
                 id="login-password"
                 type="password"
+                placeholder="••••••••"
                 value={loginForm.password}
                 onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                 required
@@ -280,6 +331,18 @@ export function AuthButtons() {
               Crea una nueva cuenta para comenzar
             </DialogDescription>
           </DialogHeader>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {success}
+            </div>
+          )}
           
           <form onSubmit={handleRegister} className="space-y-6">
             <div>
@@ -288,7 +351,7 @@ export function AuthButtons() {
               </Label>
               <Input
                 id="register-name"
-                placeholder="María Paula"
+                placeholder="Nombre"
                 value={registerForm.name}
                 onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
                 className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
@@ -303,7 +366,7 @@ export function AuthButtons() {
               <Input
                 id="register-email"
                 type="email"
-                placeholder="paitocapacho5@gmail.com"
+                placeholder="correo@.com"
                 value={registerForm.email}
                 onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                 className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
@@ -361,6 +424,12 @@ export function AuthButtons() {
               Solo usuarios con permisos de administrador pueden acceder
             </DialogDescription>
           </DialogHeader>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleAdminLogin} className="space-y-6">
             <div>
@@ -415,6 +484,18 @@ export function AuthButtons() {
               Completa el formulario y te contactaremos para brindarte una cotización personalizada
             </DialogDescription>
           </DialogHeader>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-2 rounded-md text-sm mb-4 animate-in fade-in slide-in-from-top-1">
+              {success}
+            </div>
+          )}
           
           <form onSubmit={handleCotizar} className="space-y-6">
             {/* Sección: Tus datos de contacto */}
