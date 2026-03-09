@@ -83,7 +83,7 @@ model Order {
   customerEmail String
   customerPhone String?
   notes       String?
-  createdAt   DateTime @now()
+  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relaciones
