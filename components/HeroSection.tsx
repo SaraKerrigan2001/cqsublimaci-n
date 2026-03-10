@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -40,20 +40,24 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25"
-              >
-                Explorar
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-gray-500 text-white hover:bg-white/10 backdrop-blur-sm"
-              >
-                Crear diseño
-              </Button>
+              <Link href="/servicios" passHref>
+                <Button 
+                  size="lg"
+                  className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25"
+                >
+                  Explorar
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/servicios#proceso" passHref>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto border-gray-500 text-white hover:bg-white/10 backdrop-blur-sm"
+                >
+                  Crear diseño
+                </Button>
+              </Link>
             </div>
 
             {/* Trust Indicators */}

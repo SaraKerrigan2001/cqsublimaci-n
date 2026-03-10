@@ -139,7 +139,7 @@ export default function ServiciosPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-[#120046] to-[#050012]">
+      <section id="proceso" className="py-16 md:py-20 bg-gradient-to-b from-[#120046] to-[#050012]">
         <div className="container mx-auto px-5 md:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
