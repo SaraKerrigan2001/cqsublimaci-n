@@ -18,6 +18,7 @@ import {
   Target,
   Menu,
   User,
+  Home,
   ChevronLeft,
   ChevronRight,
   Calendar,
@@ -1424,6 +1425,30 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
               <>
                 <Settings size={20} />
                 Configuración
+              </>
+            )}
+          </button>
+          <button
+            onClick={() => window.location.href = '/'}
+            className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} px-3 py-2 mt-4 rounded-lg transition-all duration-200 relative ${
+              darkMode 
+                ? 'text-gray-400 hover:text-white hover:bg-gray-800'
+                : 'text-gray-700 hover:text-gray-900 hover:bg-green-200'
+            }`}
+            title={sidebarCollapsed ? 'Volver al Inicio' : ''}
+          >
+            {sidebarCollapsed ? (
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
+                darkMode 
+                  ? 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                  : 'bg-white text-gray-700 hover:bg-green-100 hover:text-gray-900 shadow-sm'
+              }`}>
+                <Home size={20} />
+              </div>
+            ) : (
+              <>
+                <Home size={20} />
+                Volver al Inicio
               </>
             )}
           </button>

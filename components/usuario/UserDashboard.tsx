@@ -599,6 +599,22 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
               </div>
               {!sidebarCollapsed && <span className="font-bold text-sm">Ver Perfil</span>}
             </button>
+
+            <div className="pt-4 border-t border-white/5 mt-4">
+              <button
+                onClick={() => window.location.href = '/'}
+                className={`w-full group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ${
+                  darkMode ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-white/50 hover:text-green-600'
+                }`}
+              >
+                <div className={`p-2 rounded-xl transition-all duration-300 ${
+                   darkMode ? 'bg-white/5 text-gray-400 group-hover:bg-green-500 group-hover:text-white' : 'bg-white/50 text-gray-400 group-hover:bg-green-500 group-hover:text-white'
+                }`}>
+                  <Home size={20} />
+                </div>
+                {!sidebarCollapsed && <span className="font-bold text-sm">Volver al Inicio</span>}
+              </button>
+            </div>
           </div>
         </nav>
 

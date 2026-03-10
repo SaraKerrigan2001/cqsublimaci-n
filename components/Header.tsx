@@ -9,10 +9,10 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { name: "Inicio", href: "#inicio" },
-    { name: "Servicios", href: "#servicios" },
-    { name: "Galería", href: "#galeria" },
-    { name: "Contacto", href: "#contacto" }
+    { name: "Inicio", href: "/" },
+    { name: "Servicios", href: "/servicios" },
+    { name: "Galería", href: "/#galeria" },
+    { name: "Contacto", href: "/#contacto" }
   ];
 
   return (
@@ -21,9 +21,11 @@ export function Header() {
         <div className="flex items-center justify-between py-5">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-lg md:text-xl font-bold tracking-wide text-white">
-              CQ Sublimación
-            </h1>
+            <a href="/" className="flex items-center hover:opacity-80 transition-opacity">
+              <h1 className="text-lg md:text-xl font-bold tracking-wide text-white">
+                CQ Sublimación
+              </h1>
+            </a>
           </div>
 
           {/* Desktop Menu */}
