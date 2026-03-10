@@ -79,9 +79,15 @@ const customStyles: StylesConfig<Option> = {
 }
 
 export function CustomSelect({ className, error, onChange, ...props }: CustomSelectProps) {
+  const [instanceId, setInstanceId] = React.useState<string | undefined>(undefined);
+  
+  React.useEffect(() => {
+    setInstanceId(`select-${Math.random().toString(36).substring(2, 9)}`);
+  }, []);
   return (
     <div className={cn('w-full', className)}>
       <Select<Option, false>
+        instanceId={instanceId}
         {...props}
         onChange={onChange}
         styles={customStyles}
