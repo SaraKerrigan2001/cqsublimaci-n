@@ -1,19 +1,24 @@
+"use client"
+
+import { useState } from "react";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { CotizarModal } from "@/components/CotizarModal";
 import { 
   Printer, 
   Palette, 
   Coffee, 
   Shirt, 
-  Zap, 
-  Star,
   ArrowRight,
   Check
 } from "lucide-react";
 
 export default function ServiciosPage() {
+  const [cotizarOpen, setCotizarOpen] = useState(false);
+
   const services = [
     {
       icon: Coffee,
@@ -126,7 +131,10 @@ export default function ServiciosPage() {
                       ))}
                     </div>
                     
-                    <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                    <Button 
+                      onClick={() => setCotizarOpen(true)}
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                    >
                       Solicitar Cotización
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
@@ -180,17 +188,24 @@ export default function ServiciosPage() {
               Contáctanos hoy y recibe una cotización personalizada sin compromiso
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+              <Button 
+                onClick={() => setCotizarOpen(true)}
+                size="lg" 
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+              >
                 Solicitar Cotización
               </Button>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                Ver Galería
-              </Button>
+              <Link href="/#galeria">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10">
+                  Ver Galería
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
+      <CotizarModal open={cotizarOpen} onOpenChange={setCotizarOpen} />
       <Footer />
     </main>
   );
