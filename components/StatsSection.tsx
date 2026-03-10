@@ -38,7 +38,7 @@ export function StatsSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-[#120046] via-[#0b0430] to-[#050012]" />
       
       <div className="relative container mx-auto px-5 md:px-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             

@@ -24,7 +24,7 @@ export function HeroSection() {
             </div>
 
             {/* Main Title */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-white">
               Diseña, Personaliza{" "}
               <br className="hidden md:block" />
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -33,27 +33,27 @@ export function HeroSection() {
             </h1>
 
             {/* Description */}
-            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto md:mx-0 leading-relaxed">
               Impresión 3D y sublimación de tazas y camisetas con estilo moderno,
               creativo y totalmente personalizado.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Link href="/servicios" passHref>
+              <Link href="/servicios" passHref className="w-full sm:w-auto">
                 <Button 
                   size="lg"
-                  className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25"
                 >
                   Explorar
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <Link href="/servicios#proceso" passHref>
+              <Link href="/servicios#proceso" passHref className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto border-gray-500 text-white hover:bg-white/10 backdrop-blur-sm"
+                  className="w-full border-gray-500 text-white hover:bg-white/10 backdrop-blur-sm"
                 >
                   Crear diseño
                 </Button>

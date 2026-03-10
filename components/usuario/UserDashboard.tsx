@@ -373,7 +373,7 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
 
             {dashboardView === 'dashboard' ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[
                     { label: 'Total Pedidos', value: userOrders.length, icon: Package, color: 'green' },
                     { label: 'En Camino', value: userOrders.filter(o => o.status === 'en-camino').length, icon: Truck, color: 'blue' },

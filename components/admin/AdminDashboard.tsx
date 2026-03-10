@@ -679,7 +679,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
                 <Card key={product.id} className={`p-4 ${darkMode ? 'bg-gray-950 border-green-500/20' : 'bg-white border-green-200'}`}>
                   <div className="flex items-start justify-between mb-3">

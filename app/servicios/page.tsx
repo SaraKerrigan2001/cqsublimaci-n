@@ -97,7 +97,7 @@ export default function ServiciosPage() {
       {/* Services Grid */}
       <section id="servicios" className="py-16 md:py-20">
         <div className="container mx-auto px-5 md:px-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => {
               const IconComponent = service.icon;
               

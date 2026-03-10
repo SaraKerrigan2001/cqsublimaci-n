@@ -63,15 +63,15 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-[#0b0430]/98 backdrop-blur-md border-b border-white/10">
-            <div className="px-5 py-4 space-y-4">
+          <div className="md:hidden fixed inset-x-0 top-[73px] bottom-0 bg-[#050012]/98 backdrop-blur-xl z-50 overflow-y-auto">
+            <div className="px-6 py-8 flex flex-col h-full">
               {/* Mobile Navigation */}
-              <nav className="space-y-3">
+              <nav className="space-y-6 flex-1">
                 {menuItems.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
-                    className="block text-gray-300 hover:text-white transition-colors duration-200"
+                    className="block text-2xl font-bold text-gray-300 hover:text-white transition-colors duration-200"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
@@ -80,7 +80,7 @@ export function Header() {
               </nav>
               
               {/* Mobile Auth */}
-              <div className="pt-4 border-t border-white/10">
+              <div className="pt-8 border-t border-white/10 mt-auto">
                 <AuthButtons />
               </div>
             </div>
