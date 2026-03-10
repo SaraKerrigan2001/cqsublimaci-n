@@ -97,16 +97,17 @@ export function FeaturedWorks() {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="text-center mt-12">
-          <Button
-            size="lg"
-            variant="outline"
-            className="border-indigo-500 text-indigo-400 hover:bg-indigo-500/10"
-          >
-            Ver Galería Completa
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <Link href="/servicios">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-indigo-500 text-indigo-400 hover:bg-indigo-500/10"
+            >
+              Ver Todos los Servicios
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

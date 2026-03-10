@@ -1,7 +1,14 @@
+"use client"
+
+import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Zap, Heart } from "lucide-react";
+import { CotizarModal } from "./CotizarModal";
 
 export function CTASection() {
+  const [cotizarOpen, setCotizarOpen] = useState(false);
+
   return (
     <section className="relative py-20 md:py-24 overflow-hidden">
       {/* Background */}
@@ -73,20 +80,23 @@ export function CTASection() {
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
                   <Button
+                    onClick={() => setCotizarOpen(true)}
                     size="lg"
                     className="bg-white text-indigo-700 hover:bg-gray-100 shadow-xl shadow-black/20 font-semibold px-8"
                   >
-                    Unirme ahora
+                    Cotizar ahora
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                   
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="text-white border-2 border-white/30 hover:bg-white/10 backdrop-blur-sm"
-                  >
-                    Ver ejemplos
-                  </Button>
+                  <Link href="#galeria">
+                    <Button
+                      size="lg"
+                      variant="ghost"
+                      className="text-white border-2 border-white/30 hover:bg-white/10 backdrop-blur-sm"
+                    >
+                      Ver Galería
+                    </Button>
+                  </Link>
                 </div>
 
                 {/* Trust Indicator */}
@@ -116,6 +126,8 @@ export function CTASection() {
           </div>
         </div>
       </div>
+
+      <CotizarModal open={cotizarOpen} onOpenChange={setCotizarOpen} />
     </section>
   );
 }
