@@ -24,9 +24,9 @@ export function Mug3D() {
     const scene = new THREE.Scene();
 
     // --- Camera ---
-    const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 100);
-    camera.position.set(0, 1.2, 6);
-    camera.lookAt(0, 0, 0);
+    const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+    camera.position.set(0, 0.2, 7.5);
+    camera.lookAt(0, 0.1, 0);
 
     // --- Lights ---
     const ambient = new THREE.AmbientLight(0xffffff, 0.4);
@@ -197,7 +197,7 @@ export function Mug3D() {
     ctx.fillStyle = neb4;
     ctx.fillRect(0, 0, 1024, 512);
 
-    // --- Estrellas pequeñas (fondo) ---
+    // --- Estrellas pequeÃ±as (fondo) ---
     const rng = (seed: number) => {
       let s = seed;
       return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
@@ -356,7 +356,7 @@ export function Mug3D() {
     <div
       ref={mountRef}
       className="w-full h-full"
-      style={{ minHeight: '420px' }}
+      style={{ minHeight: '100%', display: 'block' }}
     />
   );
 }

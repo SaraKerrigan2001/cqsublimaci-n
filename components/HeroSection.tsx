@@ -62,7 +62,7 @@ export function HeroSection() {
           </div>
 
           {/* Taza grande abajo, centrada */}
-          <div className="w-full h-[280px] relative">
+          <div className="w-full h-[300px] relative">
             <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full pointer-events-none" />
             <Mug3D />
           </div>
