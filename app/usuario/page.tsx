@@ -1,16 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import { UserDashboard } from '@/components/usuario/UserDashboard';
+import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 
-export default function UsuarioPage() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+function UsuarioPageContent() {
+  const { darkMode, toggleDarkMode } = useTheme();
 
   return (
     <UserDashboard darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+  );
+}
+
+export default function UsuarioPage() {
+  return (
+    <ThemeProvider>
+      <UsuarioPageContent />
+    </ThemeProvider>
   );
 }

@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CustomSelect, Option } from "@/components/ui/select-custom";
 import { User, Shield } from "lucide-react";
 import { CotizarModal } from "./CotizarModal";
 
@@ -157,21 +156,13 @@ export function AuthButtons() {
           <DropdownMenuContent className="bg-gray-900 border-gray-700">
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => {
-                setError(null);
-                setSuccess(null);
-                setLoginOpen(true);
-              }}
+              onClick={() => { setError(null); setSuccess(null); setLoginOpen(true); }}
             >
               Iniciar Sesión
             </DropdownMenuItem>
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => {
-                setError(null);
-                setSuccess(null);
-                setRegisterOpen(true);
-              }}
+              onClick={() => { setError(null); setSuccess(null); setRegisterOpen(true); }}
             >
               Registrarse
             </DropdownMenuItem>
@@ -189,25 +180,17 @@ export function AuthButtons() {
           <DropdownMenuContent className="bg-gray-900 border-gray-700">
             <DropdownMenuItem 
               className="text-white hover:bg-gray-800 cursor-pointer"
-              onClick={() => {
-                setError(null);
-                setSuccess(null);
-                setAdminLoginOpen(true);
-              }}
+              onClick={() => { setError(null); setSuccess(null); setAdminLoginOpen(true); }}
             >
               Acceso Admin
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Botón Cotizar original */}
+        {/* Botón Cotizar */}
         <button 
           className="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
-          onClick={() => {
-            setError(null);
-            setSuccess(null);
-            setCotizarOpen(true);
-          }}
+          onClick={() => { setError(null); setSuccess(null); setCotizarOpen(true); }}
         >
           Cotizar
         </button>
