@@ -78,12 +78,6 @@ export function Mug3D() {
       opacity: 0.92,
     });
 
-    const rimMat = new THREE.MeshStandardMaterial({
-      color: 0xc8d0f0,
-      roughness: 0.1,
-      metalness: 0.1,
-    });
-
     // --- Mug Body (lathe geometry for realistic shape) ---
     const points: THREE.Vector2[] = [];
     // Bottom to top profile of the mug (x = radius, y = height)
