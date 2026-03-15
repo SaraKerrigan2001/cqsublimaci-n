@@ -24,10 +24,12 @@ import {
   Star,
   LayoutGrid,
   ShoppingBag,
-  Calendar
+  Calendar,
+  MessageCircle
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { UserChat } from '@/components/usuario/UserChat';
 
 interface UserDashboardProps {
   darkMode: boolean;
@@ -478,6 +480,17 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
             )}
           </div>
         );
+
+      case 'chat':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat con Soporte</h2>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Habla directamente con el administrador</p>
+            </div>
+            <UserChat darkMode={darkMode} />
+          </div>
+        );
     }
   };
 
@@ -581,6 +594,25 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
 
           <div className="space-y-2">
             {!sidebarCollapsed && <div className="h-4" />}
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={`w-full group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ${
+                activeTab === 'chat'
+                  ? (darkMode ? 'bg-green-500/10 text-green-400 shadow-[inset_0_0_0_1px_rgba(34,197,94,0.2)]' : 'bg-white text-green-600 shadow-sm')
+                  : (darkMode ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-white/50 hover:text-green-600')
+              }`}
+            >
+              {activeTab === 'chat' && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-green-500 rounded-r-full" />
+              )}
+              <div className={`p-2 rounded-xl transition-all duration-300 ${
+                activeTab === 'chat' ? 'bg-green-500 text-white shadow-md shadow-green-500/30' : 'bg-white/50 text-gray-400'
+              }`}>
+                <MessageCircle size={20} />
+              </div>
+              {!sidebarCollapsed && <span className="font-bold text-sm">Chat Soporte</span>}
+            </button>
+
             <button
               onClick={() => setActiveTab('perfil')}
               className={`w-full group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ${

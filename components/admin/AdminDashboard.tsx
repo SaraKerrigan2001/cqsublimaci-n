@@ -38,10 +38,12 @@ import {
   Truck,
   CheckCircle,
   XCircle,
-  X
+  X,
+  MessageCircle
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { AdminChat } from '@/components/admin/AdminChat';
 
 interface DashboardProps {
   darkMode: boolean;
@@ -197,6 +199,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
     { id: 'customers', label: 'Clientes', icon: Users, href: '/admin/customers' },
     { id: 'orders', label: 'Pedidos', icon: ShoppingCart, href: '/admin/orders' },
     { id: 'products', label: 'Productos', icon: Package, href: '/admin/products' },
+    { id: 'chat', label: 'Chat', icon: MessageCircle, href: '#' },
   ];
 
   const stats = [
@@ -1255,6 +1258,17 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
             </div>
           </div>
         );
+
+      case 'chat':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat con Usuarios</h2>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Responde mensajes de tus clientes en tiempo real</p>
+            </div>
+            <AdminChat darkMode={darkMode} />
+          </div>
+        );
     }
   };
 
@@ -1573,6 +1587,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
               {activeMenuItem === 'orders' && 'Pedidos'}
               {activeMenuItem === 'products' && 'Productos'}
               {activeMenuItem === 'settings' && 'Configuración'}
+              {activeMenuItem === 'chat' && 'Chat con Usuarios'}
             </h1>
           </div>
           

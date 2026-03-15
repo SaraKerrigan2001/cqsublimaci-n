@@ -22,6 +22,7 @@ model User {
   // Relaciones
   orders    Order[]
   designs   Design[]
+  conversations ChatConversation[]
 
   @@map("users")
 }
@@ -108,6 +109,33 @@ model OrderItem {
   design  Design? @relation(fields: [designId], references: [id])
 
   @@map("order_items")
+}
+
+model ChatConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  status    String   @default("OPEN") // "OPEN", "CLOSED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id])
+  messages ChatMessage[]
+
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  senderRole     String   // "USER" or "ADMIN"
+  content        String
+  read           Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+
+  @@map("chat_messages")
 }
 
 model Cotizacion {
