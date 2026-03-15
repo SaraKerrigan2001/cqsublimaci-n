@@ -7,13 +7,13 @@ import { Mug3D } from "@/components/Mug3D";
 
 export function HeroSection() {
   return (
-    <section id="inicio" className="relative overflow-hidden flex flex-col">
+    <section id="inicio" className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#050012] via-[#0b0430] to-[#120046]" />
 
       <div className="relative w-full container mx-auto px-6 md:px-10">
 
         {/* MOBILE */}
-        <div className="flex flex-col md:hidden items-center text-center pt-8 pb-0 gap-5">
+        <div className="flex flex-col md:hidden items-center text-center pt-6 pb-6 gap-4">
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs">
             <Sparkles className="w-3 h-3" />
@@ -31,7 +31,6 @@ export function HeroSection() {
             Impresi&oacute;n 3D y sublimaci&oacute;n de tazas y camisetas con estilo moderno, creativo y totalmente personalizado.
           </p>
 
-          {/* Botones en columna, anchos */}
           <div className="flex flex-col w-full gap-3">
             <Link href="/servicios" passHref>
               <Button size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold">
@@ -45,7 +44,6 @@ export function HeroSection() {
             </Link>
           </div>
 
-          {/* Stats */}
           <div className="flex items-center justify-center gap-6">
             <div className="text-center">
               <div className="text-xl font-bold text-white">300+</div>
@@ -63,8 +61,8 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Taza grande abajo */}
-          <div className="w-full h-[320px] relative">
+          {/* Taza grande abajo, centrada */}
+          <div className="w-full h-[280px] relative">
             <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full pointer-events-none" />
             <Mug3D />
           </div>
@@ -72,7 +70,7 @@ export function HeroSection() {
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden md:grid md:grid-cols-2 md:gap-8 md:items-center py-14">
+        <div className="hidden md:grid md:grid-cols-2 md:gap-8 md:items-center py-14 min-h-[calc(100vh-65px)]">
           <div className="text-left space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm">
               <Sparkles className="w-4 h-4" />
