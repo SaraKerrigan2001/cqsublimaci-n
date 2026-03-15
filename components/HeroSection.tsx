@@ -13,7 +13,7 @@ export function HeroSection() {
       <div className="relative w-full container mx-auto px-6 md:px-10">
 
         {/* MOBILE */}
-        <div className="flex flex-col md:hidden items-center text-center pt-6 pb-6 gap-4">
+        <div className="flex flex-col md:hidden items-center text-center pt-6 pb-0 gap-4">
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs">
             <Sparkles className="w-3 h-3" />
@@ -62,7 +62,7 @@ export function HeroSection() {
           </div>
 
           {/* Taza grande abajo, centrada */}
-          <div className="w-full h-[300px] relative">
+          <div className="w-full h-[300px] relative mb-0">
             <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full pointer-events-none" />
             <Mug3D />
           </div>
