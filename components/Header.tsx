@@ -57,7 +57,7 @@ export function Header() {
       </header>
 
       {/* Spacer para que el contenido no quede debajo del header fijo */}
-      <div className="h-[65px] md:h-[73px]" />
+      <div className="h-[65px] md:h-[65px]" />
 
       {/* Mobile Menu overlay */}
       {mobileMenuOpen && (
