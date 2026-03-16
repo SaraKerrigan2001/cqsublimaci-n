@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     console.error('Error en registro:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? `Error: ${error.message}` : 'Error interno del servidor', fullError: String(error) },
+      { error: 'Error interno del servidor' },
       { status: 500 }
     )
   }
