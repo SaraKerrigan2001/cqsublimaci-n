@@ -62,7 +62,11 @@ export function AuthButtons() {
           window.location.href = '/usuario';
         }
       } else {
-        setError(data.error || 'Error en el login');
+        if (data.details && data.details.length > 0) {
+          setError(data.details[0].message);
+        } else {
+          setError(data.error || 'Error en el login');
+        }
       }
     } catch (error) {
       setError('Error de conexión');
@@ -96,7 +100,11 @@ export function AuthButtons() {
           window.location.href = registerForm.role === 'ADMIN' ? '/admin' : '/usuario';
         }, 1500);
       } else {
-        setError(data.error || 'Error en el registro');
+        if (data.details && data.details.length > 0) {
+          setError(data.details[0].message);
+        } else {
+          setError(data.error || 'Error en el registro');
+        }
       }
     } catch (error) {
       setError('Error de conexión');
