@@ -59,9 +59,28 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+export async function GET(request: NextRequest) {
   try {
+    const token = request.cookies.get('token')?.value;
+    if (!token) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
+    }
+
+    const whereClause = user.role === 'ADMIN' ? {} : { email: user.email };
+
     const cotizaciones = await prisma.cotizacion.findMany({
+      where: whereClause,
       orderBy: {
         fechaCreacion: 'desc'
       }
