@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { AuthButtons } from "@/components/AuthButtons";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import Link from 'next/link';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { itemCount } = useCart();
 
   const menuItems = [
     { name: "Inicio", href: "/" },
@@ -41,17 +44,34 @@ export function Header() {
 
             {/* Desktop Auth */}
             <div className="hidden md:flex items-center gap-4">
+              <Link href="/checkout" className="relative group p-2">
+                <ShoppingCart className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors" />
+                {itemCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-indigo-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
               <AuthButtons />
             </div>
 
-            {/* Mobile: hamburger button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-white p-2 rounded-md hover:bg-white/10 transition-colors"
-              aria-label="Abrir menú"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <div className="md:hidden flex items-center gap-4">
+              <Link href="/checkout" className="relative p-2">
+                <ShoppingCart className="w-6 h-6 text-white" />
+                {itemCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-indigo-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-white p-2 rounded-md hover:bg-white/10 transition-colors"
+                aria-label="Abrir menú"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
