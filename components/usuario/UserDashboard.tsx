@@ -104,7 +104,7 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
       try {
         const [oRes, cRes, dRes] = await Promise.all([
           fetch('/api/orders'),
-          fetch('/api/cotizaciones'),
+          fetch('/api/quotations'),
           fetch('/api/designs')
         ]);
         if (oRes.ok) {
@@ -120,7 +120,10 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
               })));
            }
         }
-        if (cRes.ok) setUserCotizaciones(await cRes.json());
+        if (cRes.ok) {
+          const data = await cRes.json();
+          setUserCotizaciones(data.quotations || []);
+        }
         if (dRes.ok) setUserDesigns(await dRes.json());
       } catch (e) {}
     };
@@ -562,13 +565,13 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
               ) : userCotizaciones.map((cotiz) => (
                 <Card key={cotiz.id} className={`p-6 ${darkMode ? 'bg-gray-950 border-white/10' : 'bg-white border-green-50'}`}>
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cotiz.descripcionProyecto}</h4>
-                    <span className={`px-2 py-1 rounded text-xs font-bold text-white ${cotiz.estado === 'COMPLETADA' ? 'bg-green-500' : (cotiz.estado === 'PENDIENTE' ? 'bg-yellow-500' : 'bg-blue-500')}`}>{cotiz.estado}</span>
+                    <h4 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cotiz.description}</h4>
+                    <span className={`px-2 py-1 rounded text-xs font-bold text-white ${cotiz.status === 'COMPLETED' ? 'bg-green-500' : (cotiz.status === 'PENDING' ? 'bg-yellow-500' : 'bg-blue-500')}`}>{cotiz.status}</span>
                   </div>
                   <div className="text-sm text-gray-500 space-y-1">
-                    <p><span className="font-semibold">Urgencia:</span> {cotiz.urgenciaProyecto}</p>
-                    {cotiz.cotizacionDirigida && <p><span className="font-semibold">Objetivo:</span> {cotiz.cotizacionDirigida}</p>}
-                    <p><span className="font-semibold">Fecha:</span> {new Date(cotiz.fechaCreacion).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">Urgencia:</span> {cotiz.urgency}</p>
+                    {cotiz.targetOrCompany && <p><span className="font-semibold">Objetivo:</span> {cotiz.targetOrCompany}</p>}
+                    <p><span className="font-semibold">Fecha:</span> {new Date(cotiz.createdAt).toLocaleDateString()}</p>
                   </div>
                 </Card>
               ))}

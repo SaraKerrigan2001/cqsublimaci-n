@@ -112,7 +112,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
       try {
         const [ordersRes, cotRes] = await Promise.all([
           fetch('/api/orders'),
-          fetch('/api/cotizaciones')
+          fetch('/api/quotations')
         ]);
         if (ordersRes.ok) {
           const oFormat = await ordersRes.json();
@@ -120,7 +120,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
         }
         if (cotRes.ok) {
           const cFormat = await cotRes.json();
-          setCotizacionesData(cFormat.cotizaciones || []);
+          setCotizacionesData(cFormat.quotations || []);
         }
       } catch (error) {
         console.error('Error fetching admin data:', error);

@@ -24,13 +24,13 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
   const [success, setSuccess] = useState<string | null>(null);
 
   const [cotizarForm, setCotizarForm] = useState({
-    nombreCompleto: "",
+    fullName: "",
     email: "",
     whatsapp: "",
-    cotizacionDirigida: "",
-    tipoCliente: "",
-    urgenciaProyecto: "Normal (2-3 semanas)",
-    descripcionProyecto: ""
+    targetOrCompany: "",
+    clientType: "",
+    urgency: "Normal (2-3 semanas)",
+    description: ""
   });
 
   const tipoClienteOptions: Option[] = [
@@ -51,7 +51,7 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
     setLoading(true);
     
     try {
-      const response = await fetch('/api/cotizaciones', {
+      const response = await fetch('/api/quotations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cotizarForm)
@@ -61,13 +61,13 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
         setSuccess('Cotización enviada exitosamente. Te contactaremos pronto.');
         setError(null);
         setCotizarForm({
-          nombreCompleto: "",
+          fullName: "",
           email: "",
           whatsapp: "",
-          cotizacionDirigida: "",
-          tipoCliente: "",
-          urgenciaProyecto: "Normal (2-3 semanas)",
-          descripcionProyecto: ""
+          targetOrCompany: "",
+          clientType: "",
+          urgency: "Normal (2-3 semanas)",
+          description: ""
         });
         setTimeout(() => {
           onOpenChange(false);
@@ -120,8 +120,8 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
               <Input
                 id="cotizar-nombre"
                 placeholder="Por ejemplo: Raquel Ramírez"
-                value={cotizarForm.nombreCompleto}
-                onChange={(e) => setCotizarForm({ ...cotizarForm, nombreCompleto: e.target.value })}
+                value={cotizarForm.fullName}
+                onChange={(e) => setCotizarForm({ ...cotizarForm, fullName: e.target.value })}
                 className="mt-1 bg-gray-800/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-indigo-500"
                 required
               />
@@ -162,8 +162,8 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
               <Input
                 id="cotizar-dirigida"
                 placeholder="Por ejemplo: Organización S.A.S"
-                value={cotizarForm.cotizacionDirigida}
-                onChange={(e) => setCotizarForm({ ...cotizarForm, cotizacionDirigida: e.target.value })}
+                value={cotizarForm.targetOrCompany}
+                onChange={(e) => setCotizarForm({ ...cotizarForm, targetOrCompany: e.target.value })}
                 className="mt-1 bg-gray-800/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-indigo-500"
               />
             </div>
@@ -180,11 +180,11 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
               </Label>
               <div className="mt-1">
                 <CustomSelect
-                  value={tipoClienteOptions.find(option => option.value === cotizarForm.tipoCliente)}
+                  value={tipoClienteOptions.find(option => option.value === cotizarForm.clientType)}
                   onChange={(selectedOption) => {
                     setCotizarForm({ 
                       ...cotizarForm, 
-                      tipoCliente: selectedOption?.value || "" 
+                      clientType: selectedOption?.value || "" 
                     });
                   }}
                   options={tipoClienteOptions}
@@ -200,11 +200,11 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
               </Label>
               <div className="mt-1">
                 <CustomSelect
-                  value={urgenciaOptions.find(option => option.value === cotizarForm.urgenciaProyecto)}
+                  value={urgenciaOptions.find(option => option.value === cotizarForm.urgency)}
                   onChange={(selectedOption) => {
                     setCotizarForm({ 
                       ...cotizarForm, 
-                      urgenciaProyecto: selectedOption?.value || "Normal (2-3 semanas)" 
+                      urgency: selectedOption?.value || "Normal (2-3 semanas)" 
                     });
                   }}
                   options={urgenciaOptions}
@@ -232,8 +232,8 @@ export function CotizarModal({ open, onOpenChange }: CotizarModalProps) {
               <textarea
                 id="cotizar-descripcion"
                 placeholder="Por ejemplo: ...la base de datos que..."
-                value={cotizarForm.descripcionProyecto}
-                onChange={(e) => setCotizarForm({ ...cotizarForm, descripcionProyecto: e.target.value })}
+                value={cotizarForm.description}
+                onChange={(e) => setCotizarForm({ ...cotizarForm, description: e.target.value })}
                 className="mt-1 w-full min-h-[120px] p-3 rounded-md bg-gray-800/50 border border-gray-600 text-white placeholder:text-gray-400 resize-none focus:border-indigo-500 focus:outline-none"
                 required
               />
