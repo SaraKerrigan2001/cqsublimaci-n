@@ -1,0 +1,9 @@
+
+> Build error occurred
+Error: EPERM: operation not permitted, unlink 'D:\OneDrive\Documents\Mini-Proyecto\.next\static\juSqWhDK_CMyBW5pjnH2C'
+    at ignore-listed frames {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'unlink',
+  path: 'D:\\OneDrive\\Documents\\Mini-Proyecto\\.next\\static\\juSqWhDK_CMyBW5pjnH2C'
+}
