@@ -129,12 +129,12 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
 
   // Productos disponibles
   const availableProducts = [
-    { id: 1, name: 'Taza Personalizada', price: '$15,000', image: '🏺', category: 'Sublimación', rating: 4.8 },
-    { id: 2, name: 'Camiseta Sublimada', price: '$25,000', image: '👕', category: 'Sublimación', rating: 4.9 },
-    { id: 3, name: 'Figura 3D', price: '$45,000', image: '🎨', category: 'Impresión 3D', rating: 4.7 },
-    { id: 4, name: 'Llavero 3D', price: '$8,000', image: '🔑', category: 'Impresión 3D', rating: 4.5 },
-    { id: 5, name: 'Diseño Gráfico', price: '$50,000', image: '🎯', category: 'Diseño', rating: 5.0 },
-    { id: 6, name: 'Taza Mágica', price: '$20,000', image: '☕', category: 'Sublimación', rating: 4.9 },
+    { id: 1, name: 'Taza Personalizada', price: '$15,000', image: '/images/taza.png', category: 'Sublimación', rating: 4.8 },
+    { id: 2, name: 'Camiseta Sublimada', price: '$25,000', image: '/images/camiseta.png', category: 'Sublimación', rating: 4.9 },
+    { id: 3, name: 'Figura 3D', price: '$45,000', image: '/images/figura3d.png', category: 'Impresión 3D', rating: 4.7 },
+    { id: 4, name: 'Mousepad Personalizado', price: '$12,000', image: '/images/mousepad.png', category: 'Sublimación', rating: 4.5 },
+    { id: 5, name: 'Diseño Gráfico KIT', price: '$50,000', image: '/images/logo.png', category: 'Diseño', rating: 5.0 },
+    { id: 6, name: 'Taza Mágica', price: '$20,000', image: '/images/taza.png', category: 'Sublimación', rating: 4.9 },
   ];
 
   // Actividad de ejemplo
@@ -276,8 +276,8 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
                   darkMode ? 'bg-gray-950 border-green-500/10 hover:border-green-500/30' : 'bg-white border-green-50'
                 }`}>
                   <div className="relative mb-4">
-                    <div className="w-full h-40 bg-gradient-to-br from-green-500/5 to-green-600/10 rounded-2xl flex items-center justify-center text-7xl transition-transform group-hover:scale-105">
-                      {product.image}
+                    <div className="w-full h-40 bg-gradient-to-br from-green-500/5 to-green-600/10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 p-4 overflow-hidden">
+                      <img src={product.image} alt={product.name} className="w-full h-full object-contain filter drop-shadow-md" />
                     </div>
                     <div className="absolute top-2 right-2 flex items-center gap-1 bg-white/90 dark:bg-black/80 px-2 py-1 rounded-lg text-xs font-bold text-yellow-500">
                       <Star size={12} fill="currentColor" />
