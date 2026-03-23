@@ -39,7 +39,8 @@ import {
   CheckCircle,
   XCircle,
   X,
-  MessageCircle
+  MessageCircle,
+  FileText
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -99,6 +100,34 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
       setNotification({ show: false, message: '', type: 'success' });
     }, 3000);
   };
+
+  const [ordersData, setOrdersData] = useState<any[]>([]);
+  const [cotizacionesData, setCotizacionesData] = useState<any[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [ordersRes, cotRes] = await Promise.all([
+          fetch('/api/orders'),
+          fetch('/api/cotizaciones')
+        ]);
+        if (ordersRes.ok) {
+          const oFormat = await ordersRes.json();
+          setOrdersData(oFormat.orders || []);
+        }
+        if (cotRes.ok) {
+          const cFormat = await cotRes.json();
+          setCotizacionesData(cFormat.cotizaciones || []);
+        }
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Funciones para clientes
   const handleViewCustomer = (customer: any) => {
@@ -199,6 +228,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
     { id: 'customers', label: 'Clientes', icon: Users, href: '/admin/customers' },
     { id: 'orders', label: 'Pedidos', icon: ShoppingCart, href: '/admin/orders' },
     { id: 'products', label: 'Productos', icon: Package, href: '/admin/products' },
+    { id: 'cotizaciones', label: 'Cotizaciones', icon: FileText, href: '/admin/cotizaciones' },
     { id: 'chat', label: 'Chat', icon: MessageCircle, href: '#' },
   ];
 
@@ -423,13 +453,16 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
         );
       
       case 'orders':
-        const orders = [
-          { id: 'ORD-001', customer: 'María González', products: ['Taza personalizada', 'Camiseta sublimada'], total: '$45,990', status: 'pending', date: '2024-03-10', paymentStatus: 'paid' },
-          { id: 'ORD-002', customer: 'Carlos Rodríguez', products: ['Impresión 3D figura'], total: '$89,500', status: 'processing', date: '2024-03-09', paymentStatus: 'paid' },
-          { id: 'ORD-003', customer: 'Ana Martínez', products: ['Taza personalizada', 'Llavero 3D', 'Camiseta'], total: '$67,250', status: 'shipped', date: '2024-03-08', paymentStatus: 'paid' },
-          { id: 'ORD-004', customer: 'Luis Fernández', products: ['Camiseta sublimada'], total: '$25,000', status: 'delivered', date: '2024-03-07', paymentStatus: 'paid' },
-          { id: 'ORD-005', customer: 'Elena Ruiz', products: ['Impresión 3D personalizada'], total: '$120,000', status: 'pending', date: '2024-03-06', paymentStatus: 'pending' },
-        ];
+        const orders = ordersData.map(o => ({
+          id: o.id.substring(0, 8).toUpperCase(),
+          originalId: o.id,
+          customer: o.user?.name || o.user?.email || 'Desconocido',
+          products: o.orderItems?.map((item: any) => item.product?.name || item.design?.title || 'Producto') || [],
+          total: new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(o.totalAmount || 0),
+          status: o.status.toLowerCase(),
+          date: o.createdAt,
+          paymentStatus: o.status === 'PENDING' ? 'pending' : 'paid'
+        }));
 
         const getOrderStatusIcon = (status: string) => {
           switch (status) {
@@ -564,7 +597,7 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
                           <td className={`py-4 px-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{order.customer}</td>
                           <td className="py-4 px-2">
                             <div className="space-y-1">
-                              {order.products.map((product, index) => (
+                              {order.products.map((product: string, index: number) => (
                                 <div key={index} className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>• {product}</div>
                               ))}
                             </div>
@@ -1256,6 +1289,59 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
                 </div>
               </Card>
             </div>
+          </div>
+        );
+
+      case 'cotizaciones':
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Cotizaciones</h2>
+                <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Gestión de solicitudes de cotización</p>
+              </div>
+            </div>
+            
+            <Card className={`${darkMode ? 'bg-gray-950 border-green-500/20' : 'bg-white border-green-200'} p-4 md:p-6`}>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                      <th className={`text-left py-3 px-2 text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>ID</th>
+                      <th className={`text-left py-3 px-2 text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Cliente</th>
+                      <th className={`text-left py-3 px-2 text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Descripción</th>
+                      <th className={`text-left py-3 px-2 text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Fecha Creada</th>
+                      <th className={`text-left py-3 px-2 text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cotizacionesData.length === 0 ? (
+                       <tr>
+                         <td colSpan={5} className="py-4 text-center text-gray-500">No hay cotizaciones solicitadas</td>
+                       </tr>
+                    ) : (
+                      cotizacionesData.map(cot => (
+                        <tr key={cot.id} className={`border-b ${darkMode ? 'border-gray-800' : 'border-gray-100'}`}>
+                          <td className={`py-4 px-2 font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cot.id.substring(0,8).toUpperCase()}</td>
+                          <td className={`py-4 px-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cot.user?.name || cot.user?.email || 'Usuario'}</td>
+                          <td className={`py-4 px-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} max-w-xs truncate`}>{cot.description}</td>
+                          <td className={`py-4 px-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{new Date(cot.createdAt).toLocaleDateString()}</td>
+                          <td className="py-4 px-2">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${
+                              cot.status === 'PENDING' ? 'bg-yellow-500' :
+                              cot.status === 'APPROVED' ? 'bg-green-500' :
+                              cot.status === 'REJECTED' ? 'bg-red-500' : 'bg-blue-500'
+                            }`}>
+                              {cot.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
           </div>
         );
 
