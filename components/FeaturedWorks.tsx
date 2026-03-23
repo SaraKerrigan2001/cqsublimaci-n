@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Star } from "lucide-react";
@@ -11,6 +12,7 @@ export function FeaturedWorks() {
       subtitle: "Sublimación HD",
       category: "Sublimación",
       gradient: "from-blue-500 to-cyan-500",
+      image: "/images/taza.png",
       rating: 5,
       likes: 24
     },
@@ -20,6 +22,7 @@ export function FeaturedWorks() {
       subtitle: "Diseño Exclusivo",
       category: "Sublimación",
       gradient: "from-purple-500 to-pink-500",
+      image: "/images/camiseta.png",
       rating: 5,
       likes: 18
     },
@@ -29,6 +32,7 @@ export function FeaturedWorks() {
       subtitle: "Impresión 3D",
       category: "Impresión 3D",
       gradient: "from-green-500 to-emerald-500",
+      image: "/images/figura3d.png",
       rating: 5,
       likes: 32
     },
@@ -38,6 +42,7 @@ export function FeaturedWorks() {
       subtitle: "Diseño Profesional",
       category: "Diseño Gráfico",
       gradient: "from-orange-500 to-red-500",
+      image: "/images/logo.png",
       rating: 5,
       likes: 15
     },
@@ -47,6 +52,7 @@ export function FeaturedWorks() {
       subtitle: "Sublimación + LED",
       category: "Sublimación",
       gradient: "from-indigo-500 to-purple-500",
+      image: "/images/mousepad.png",
       rating: 5,
       likes: 28
     }
@@ -117,37 +123,38 @@ export function FeaturedWorks() {
 
 function WorkCard({ work }: { work: any }) {
   return (
-    <Card className="min-w-[280px] md:min-w-0 bg-white/5 border-white/10 overflow-hidden group hover:bg-white/10 transition-all duration-300 hover:scale-105">
+    <Card className="min-w-[280px] md:min-w-0 bg-white/5 border-white/10 overflow-hidden group hover:bg-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/20" style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}>
       <CardContent className="p-0">
         {/* Image Container */}
         <div className="relative h-48 md:h-56 overflow-hidden">
-          {/* Placeholder Image with Gradient */}
-          <div className={`w-full h-full bg-gradient-to-br ${work.gradient} flex items-center justify-center relative`}>
-            {/* Content Overlay */}
-            <div className="absolute inset-0 bg-black/20" />
+          {/* Real Image with 3D Effect Hover */}
+          <div className={`w-full h-full bg-gradient-to-br ${work.gradient} flex items-center justify-center relative group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700`}>
+            {work.image ? (
+              <Image 
+                src={work.image} 
+                alt={work.title} 
+                fill 
+                className="object-cover mix-blend-overlay opacity-80 group-hover:opacity-100 group-hover:mix-blend-normal transition-all duration-700"
+                sizes="(max-width: 768px) 100vw, 20vw"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-black/20" />
+            )}
             
-            {/* Placeholder Content */}
-            <div className="relative text-center text-white z-10">
-              <div className="text-4xl mb-2">
-                {work.category === 'Sublimación' ? '☕' : 
-                 work.category === 'Impresión 3D' ? '🎯' : '🎨'}
-              </div>
-              <div className="text-sm font-medium opacity-90">
-                {work.category}
-              </div>
-            </div>
+            {/* Shadow Overlay for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050012]/90 via-[#050012]/30 to-transparent z-10 pointer-events-none" />
 
             {/* Stats Overlay */}
-            <div className="absolute top-3 right-3 flex gap-2">
-              <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
-                <Heart className="w-3 h-3 text-red-400" />
-                <span className="text-xs text-white">{work.likes}</span>
+            <div className="absolute top-3 right-3 flex gap-2 z-20 group-hover:-translate-y-1 group-hover:scale-105 transition-all duration-500">
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md rounded-full px-2 py-1 border border-white/10 shadow-xl">
+                <Heart className="w-3 h-3 text-red-400 drop-shadow-md" />
+                <span className="text-xs font-bold text-white">{work.likes}</span>
               </div>
             </div>
 
             {/* Category Badge */}
-            <div className="absolute bottom-3 left-3">
-              <span className="bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">
+            <div className="absolute bottom-3 left-3 z-20 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:scale-105 transition-all duration-500">
+              <span className="bg-white/10 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-xl">
                 {work.category}
               </span>
             </div>
