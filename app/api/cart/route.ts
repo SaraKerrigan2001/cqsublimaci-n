@@ -10,13 +10,16 @@ export async function POST(request: NextRequest) {
     const token = request.cookies.get('token')?.value || request.cookies.get('auth_token')?.value;
     if (!token) return NextResponse.json({ error: 'No auth' }, { status: 401 });
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const userId = decoded.id || decoded.userId;
+    if (!userId) return NextResponse.json({ error: 'Token missing userId' }, { status: 401 });
+    
     const { items } = await request.json();
 
     const cart = await prisma.cart.upsert({
-      where: { userId: decoded.id },
+      where: { userId },
       update: {},
-      create: { userId: decoded.id }
+      create: { userId }
     });
 
     await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
@@ -41,9 +44,12 @@ export async function GET(request: NextRequest) {
     const token = request.cookies.get('token')?.value || request.cookies.get('auth_token')?.value;
     if (!token) return NextResponse.json({ error: 'No auth' }, { status: 401 });
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const userId = decoded.id || decoded.userId;
+    if (!userId) return NextResponse.json({ error: 'Token missing userId' }, { status: 401 });
+
     const cart = await prisma.cart.findUnique({
-      where: { userId: decoded.id },
+      where: { userId },
       include: { items: { include: { product: true } } }
     });
 

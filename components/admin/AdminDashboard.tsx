@@ -57,6 +57,8 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
+  const notificationsMenuRef = useRef<HTMLDivElement>(null);
 
   // Estados para modales de clientes
   const [viewCustomerModal, setViewCustomerModal] = useState(false);
@@ -127,7 +129,15 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
       }
     };
     fetchData();
+    
+    // Auto-refresh data every 30 seconds for notifications
+    const intervalId = setInterval(fetchData, 30000);
+    return () => clearInterval(intervalId);
   }, []);
+
+  const pendingOrders = ordersData.filter(o => o.status === 'PENDING').length;
+  const pendingQuotes = cotizacionesData.filter(c => c.status === 'PENDING').length;
+  const totalNotifications = pendingOrders + pendingQuotes;
 
   // Funciones para clientes
   const handleViewCustomer = (customer: any) => {
@@ -200,6 +210,9 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
     function handleClickOutside(event: MouseEvent) {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setShowProfileMenu(false);
+      }
+      if (notificationsMenuRef.current && !notificationsMenuRef.current.contains(event.target as Node)) {
+        setShowNotificationsMenu(false);
       }
     }
 
@@ -1695,14 +1708,87 @@ export function AdminDashboard({ darkMode, toggleDarkMode }: DashboardProps) {
             </div>
             
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className={`relative transition-colors ${
-              darkMode 
-                ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800'
-                : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
-            }`}>
-              <Bell size={20} />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-            </Button>
+            <div className="relative" ref={notificationsMenuRef}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowNotificationsMenu(!showNotificationsMenu)}
+                className={`relative transition-colors ${
+                  darkMode 
+                    ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <Bell size={20} />
+                {totalNotifications > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white">
+                    {totalNotifications}
+                  </span>
+                )}
+              </Button>
+              
+              {showNotificationsMenu && (
+                <div className={`absolute right-[-2.5rem] mt-2 w-72 rounded-lg shadow-lg border z-50 overflow-hidden ${
+                  darkMode ? 'bg-gray-900 border-green-500/20' : 'bg-white border-green-200'
+                }`}>
+                  <div className={`px-4 py-3 border-b ${darkMode ? 'border-gray-800' : 'border-gray-100'}`}>
+                    <h3 className={`font-semibold text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>Notificaciones</h3>
+                  </div>
+                  <div className="max-h-[300px] overflow-y-auto">
+                    {totalNotifications === 0 ? (
+                      <div className={`px-4 py-6 text-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        No tienes notificaciones nuevas
+                      </div>
+                    ) : (
+                      <>
+                        {pendingOrders > 0 && (
+                          <div 
+                            className={`px-4 py-3 border-b cursor-pointer transition-colors ${
+                              darkMode ? 'border-gray-800 hover:bg-gray-800' : 'border-gray-100 hover:bg-gray-50'
+                            }`}
+                            onClick={() => {
+                              setActiveMenuItem('orders');
+                              setShowNotificationsMenu(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <ShoppingCart size={14} className="text-blue-500" />
+                              </div>
+                              <div>
+                                <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pendingOrders} Nuevos Pedidos</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Tienes órdenes pendientes</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {pendingQuotes > 0 && (
+                          <div 
+                            className={`px-4 py-3 cursor-pointer transition-colors ${
+                              darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-50'
+                            }`}
+                            onClick={() => {
+                              setActiveMenuItem('cotizaciones');
+                              setShowNotificationsMenu(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                                <FileText size={14} className="text-yellow-500" />
+                              </div>
+                              <div>
+                                <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{pendingQuotes} Nuevas Cotizaciones</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Solicitudes en espera</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
             
             {/* Theme Toggle */}
             <Button 
