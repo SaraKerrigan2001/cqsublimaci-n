@@ -51,6 +51,9 @@ export function FeaturedWorks() {
 
   const openDetails = (product: any) => {
     console.log("Opening details for product:", product?.name, product);
+    if (typeof window !== 'undefined') {
+      window.alert("Abriendo detalles de: " + product?.name);
+    }
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
