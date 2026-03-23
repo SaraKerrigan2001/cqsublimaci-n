@@ -25,7 +25,8 @@ import {
   LayoutGrid,
   ShoppingBag,
   Calendar,
-  MessageCircle
+  MessageCircle,
+  Upload
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,12 +91,41 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
     fetchUser();
   }, []);
 
-  // Pedidos de ejemplo
-  const userOrders = [
+  // Pedidos reales e historiales
+  const [userOrders, setUserOrders] = useState<any[]>([
     { id: 'PED-001', product: 'Taza Personalizada', status: 'entregado', date: '2024-03-01', total: '$15,000', image: '🏺' },
-    { id: 'PED-002', product: 'Camiseta Sublimada', status: 'en-camino', date: '2024-03-05', total: '$25,000', image: '👕' },
-    { id: 'PED-003', product: 'Llavero 3D', status: 'procesando', date: '2024-03-08', total: '$8,000', image: '🔑' },
-  ];
+  ]);
+  const [userCotizaciones, setUserCotizaciones] = useState<any[]>([]);
+  const [userDesigns, setUserDesigns] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!userData) return;
+    const fetchRealData = async () => {
+      try {
+        const [oRes, cRes, dRes] = await Promise.all([
+          fetch('/api/orders'),
+          fetch('/api/cotizaciones'),
+          fetch('/api/designs')
+        ]);
+        if (oRes.ok) {
+           const db = await oRes.json();
+           if(db.length > 0) {
+              setUserOrders(db.map((o: any) => ({
+                  id: o.id.slice(0,8),
+                  product: o.orderItems?.[0]?.product?.name || 'Pedido Personalizado',
+                  status: o.status.toLowerCase() === 'completed' ? 'entregado' : (o.status.toLowerCase() === 'processing' ? 'procesando' : 'pendiente'),
+                  date: o.createdAt,
+                  total: `$${o.total.toLocaleString()}`,
+                  image: '📦'
+              })));
+           }
+        }
+        if (cRes.ok) setUserCotizaciones(await cRes.json());
+        if (dRes.ok) setUserDesigns(await dRes.json());
+      } catch (e) {}
+    };
+    fetchRealData();
+  }, [userData]);
 
   // Productos disponibles
   const availableProducts = [
@@ -491,6 +521,60 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
             <UserChat darkMode={darkMode} />
           </div>
         );
+
+      case 'mis-disenos':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Mis Diseños</h2>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Sube y gestiona tus propios diseños para sublimar o imprimir</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className={`p-6 border-dashed border-2 flex flex-col items-center justify-center min-h-[200px] cursor-pointer hover:bg-white/5 transition-colors ${darkMode ? 'border-white/20' : 'border-gray-200'} text-gray-500`}>
+                <Upload size={32} className="mb-2" />
+                <span className="font-bold">Subir Nuevo Diseño</span>
+              </Card>
+              {userDesigns.map(design => (
+                <Card key={design.id} className={`p-4 overflow-hidden group ${darkMode ? 'bg-white/5' : 'bg-white'}`}>
+                  <div className="w-full h-32 bg-gray-100 rounded-lg mb-2 relative overflow-hidden">
+                    {design.imageUrl ? <img src={design.imageUrl} className="w-full h-full object-cover" /> : <div className="absolute inset-0 bg-green-100 flex items-center justify-center font-bold text-green-500">DISEÑO</div>}
+                  </div>
+                  <h4 className="font-bold text-sm truncate">{design.name}</h4>
+                  <p className="text-xs text-gray-500">{new Date(design.createdAt).toLocaleDateString()}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'cotizaciones':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Mis Cotizaciones</h2>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Historial y estado de tus proyectos a medida</p>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {userCotizaciones.length === 0 ? (
+                <Card className={`p-6 ${darkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-100'} text-center text-gray-400`}>
+                  No tienes cotizaciones activas
+                </Card>
+              ) : userCotizaciones.map((cotiz) => (
+                <Card key={cotiz.id} className={`p-6 ${darkMode ? 'bg-gray-950 border-white/10' : 'bg-white border-green-50'}`}>
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cotiz.descripcionProyecto}</h4>
+                    <span className={`px-2 py-1 rounded text-xs font-bold text-white ${cotiz.estado === 'COMPLETADA' ? 'bg-green-500' : (cotiz.estado === 'PENDIENTE' ? 'bg-yellow-500' : 'bg-blue-500')}`}>{cotiz.estado}</span>
+                  </div>
+                  <div className="text-sm text-gray-500 space-y-1">
+                    <p><span className="font-semibold">Urgencia:</span> {cotiz.urgenciaProyecto}</p>
+                    {cotiz.cotizacionDirigida && <p><span className="font-semibold">Objetivo:</span> {cotiz.cotizacionDirigida}</p>}
+                    <p><span className="font-semibold">Fecha:</span> {new Date(cotiz.fechaCreacion).toLocaleDateString()}</p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
     }
   };
 
@@ -569,6 +653,8 @@ export function UserDashboard({ darkMode, toggleDarkMode }: UserDashboardProps) 
             {[
               { id: 'productos', label: 'Ver Productos', icon: ShoppingBag },
               { id: 'pedidos', label: 'Mis Pedidos', icon: Package },
+              { id: 'mis-disenos', label: 'Mis Diseños', icon: Upload },
+              { id: 'cotizaciones', label: 'Cotizaciones', icon: FileText },
             ].map((item) => (
               <button
                 key={item.id}
