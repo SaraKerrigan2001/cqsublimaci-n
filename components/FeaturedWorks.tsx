@@ -50,6 +50,7 @@ export function FeaturedWorks() {
   };
 
   const openDetails = (product: any) => {
+    console.log("Opening details for product:", product?.name, product);
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
