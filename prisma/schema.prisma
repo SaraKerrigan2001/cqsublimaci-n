@@ -51,6 +51,9 @@ model Product {
   image       String?
   categoryId  String
   isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  likes       Int      @default(0)
+  rating      Float    @default(5.0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

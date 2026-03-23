@@ -61,78 +61,109 @@ async function main() {
   })
 
   // Crear productos de sublimación
-  await prisma.product.createMany({
-    data: [
-      {
-        name: 'Taza Personalizada',
-        description: 'Taza de cerámica blanca con sublimación personalizada',
-        price: 15.99,
-        categoryId: sublimacionCategory.id,
-        isActive: true
-      },
-      {
-        name: 'Camiseta Sublimada',
-        description: 'Camiseta 100% poliéster con diseño sublimado',
-        price: 25.99,
-        categoryId: sublimacionCategory.id,
-        isActive: true
-      },
-      {
-        name: 'Mouse Pad Personalizado',
-        description: 'Mouse pad con base antideslizante y diseño personalizado',
-        price: 12.99,
-        categoryId: sublimacionCategory.id,
-        isActive: true
-      }
-    ]
-  })
+  const sublimacionProducts = [
+    {
+      name: 'Taza Personalizada Premium',
+      description: 'Taza de cerámica de alta calidad con sublimación de alta definición. Resistente a microondas y lavavajillas.',
+      price: 15.00,
+      categoryId: sublimacionCategory.id,
+      isActive: true,
+      isFeatured: true,
+      likes: 24,
+      rating: 5.0,
+      image: '/images/taza.png'
+    },
+    {
+      name: 'Camiseta Gamer Edition',
+      description: 'Camiseta técnica transpirable con diseño exclusivo para gamers. Impresión duradera y colores vibrantes.',
+      price: 25.00,
+      categoryId: sublimacionCategory.id,
+      isActive: true,
+      isFeatured: true,
+      likes: 18,
+      rating: 5.0,
+      image: '/images/camiseta.png'
+    },
+    {
+      name: 'Mouse Pad Gaming',
+      description: 'Alfombrilla de ratón de gran tamaño con superficie de baja fricción y bordes cosidos. Ideal para gaming.',
+      price: 12.00,
+      categoryId: sublimacionCategory.id,
+      isActive: true,
+      isFeatured: true,
+      likes: 28,
+      rating: 5.0,
+      image: '/images/mousepad.png'
+    }
+  ];
+
+  for (const product of sublimacionProducts) {
+    await prisma.product.upsert({
+      where: { id: product.name.toLowerCase().replace(/ /g, '-') }, // Using name as ID for seed consistency if needed, but cuid is default
+      update: product,
+      create: { ...product, id: undefined } as any
+    });
+  }
 
   // Crear productos de impresión 3D
-  await prisma.product.createMany({
-    data: [
-      {
-        name: 'Figura Personalizada 3D',
-        description: 'Figura impresa en 3D según tu diseño personalizado',
-        price: 35.99,
-        categoryId: impresion3dCategory.id,
-        isActive: true
-      },
-      {
-        name: 'Llavero 3D',
-        description: 'Llavero personalizado impreso en 3D',
-        price: 8.99,
-        categoryId: impresion3dCategory.id,
-        isActive: true
-      },
-      {
-        name: 'Prototipo 3D',
-        description: 'Servicio de prototipado rápido en 3D',
-        price: 45.99,
-        categoryId: impresion3dCategory.id,
-        isActive: true
-      }
-    ]
-  })
+  const impresion3dProducts = [
+    {
+      name: 'Figura 3D Personalizada',
+      description: 'Figura impresa en 3D con gran detalle. Material PLA biodegradable de alta resistencia.',
+      price: 45.00,
+      categoryId: impresion3dCategory.id,
+      isActive: true,
+      isFeatured: true,
+      likes: 32,
+      rating: 5.0,
+      image: '/images/figura3d.png'
+    },
+    {
+      name: 'Llavero 3D',
+      description: 'Llavero personalizado impreso en 3D.',
+      price: 8.99,
+      categoryId: impresion3dCategory.id,
+      isActive: true
+    }
+  ];
+
+  for (const product of impresion3dProducts) {
+    await prisma.product.upsert({
+      where: { id: product.name.toLowerCase().replace(/ /g, '-') },
+      update: product,
+      create: { ...product, id: undefined } as any
+    });
+  }
 
   // Crear servicios de diseño
-  await prisma.product.createMany({
-    data: [
-      {
-        name: 'Diseño de Logo',
-        description: 'Diseño profesional de logotipo personalizado',
-        price: 75.99,
-        categoryId: disenoCategory.id,
-        isActive: true
-      },
-      {
-        name: 'Diseño para Sublimación',
-        description: 'Diseño gráfico optimizado para sublimación',
-        price: 20.99,
-        categoryId: disenoCategory.id,
-        isActive: true
-      }
-    ]
-  })
+  const disenoProducts = [
+    {
+      name: 'Logo Corporativo',
+      description: 'Diseño de identidad visual para empresas. Incluye variaciones de logo y manual de marca básico.',
+      price: 50.00,
+      categoryId: disenoCategory.id,
+      isActive: true,
+      isFeatured: true,
+      likes: 15,
+      rating: 5.0,
+      image: '/images/logo.png'
+    },
+    {
+      name: 'Diseño para Sublimación',
+      description: 'Diseño gráfico optimizado para sublimación.',
+      price: 20.99,
+      categoryId: disenoCategory.id,
+      isActive: true
+    }
+  ];
+
+  for (const product of disenoProducts) {
+    await prisma.product.upsert({
+      where: { id: product.name.toLowerCase().replace(/ /g, '-') },
+      update: product,
+      create: { ...product, id: undefined } as any
+    });
+  }
 
   console.log('✅ Seed completado exitosamente!')
   console.log(`👤 Usuario admin: admin@cqsublimacion.com / admin123`)
