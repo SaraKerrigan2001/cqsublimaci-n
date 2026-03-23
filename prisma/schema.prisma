@@ -24,6 +24,7 @@ model User {
   orders    Order[]
   designs   Design[]
   conversations ChatConversation[]
+  quotations Quotation[]
   cart      Cart?
 
   @@map("users")
@@ -141,20 +142,24 @@ model ChatMessage {
   @@map("chat_messages")
 }
 
-model Cotizacion {
-  id                  String   @id @default(cuid())
-  nombreCompleto      String
-  email               String
-  whatsapp            String?
-  cotizacionDirigida  String?
-  tipoCliente         String?
-  urgenciaProyecto    String   @default("Normal (2-3 semanas)")
-  descripcionProyecto String
-  estado              String   @default("PENDIENTE") // "PENDIENTE", "EN_PROCESO", "COMPLETADA", "CANCELADA"
-  fechaCreacion       DateTime @default(now())
-  fechaActualizacion  DateTime @updatedAt
+model Quotation {
+  id                String   @id @default(cuid())
+  fullName          String
+  email             String
+  whatsapp          String?
+  targetOrCompany   String?
+  clientType        String?
+  urgency           String   @default("Normal (2-3 semanas)")
+  description       String
+  status            String   @default("PENDING") // "PENDING", "IN_PROGRESS", "COMPLETED", "CANCELADA"
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String?
 
-  @@map("cotizaciones")
+  // Relaciones
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("quotations")
 }
 
 model Cart {
