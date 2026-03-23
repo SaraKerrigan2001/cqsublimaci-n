@@ -1,15 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { cookies } from 'next/headers';
 import * as jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get('auth_token')?.value;
+    const token = request.cookies.get('token')?.value || request.cookies.get('auth_token')?.value;
     if (!token) return NextResponse.json({ error: 'No auth' }, { status: 401 });
 
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
@@ -38,10 +36,9 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get('auth_token')?.value;
+    const token = request.cookies.get('token')?.value || request.cookies.get('auth_token')?.value;
     if (!token) return NextResponse.json({ error: 'No auth' }, { status: 401 });
 
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string };

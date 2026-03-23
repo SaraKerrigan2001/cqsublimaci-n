@@ -5,10 +5,14 @@ import { prisma } from '@/lib/db'
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
 function getUser(request: NextRequest) {
-  const token = request.cookies.get('token')?.value
+  const token = request.cookies.get('token')?.value || request.cookies.get('auth_token')?.value
   if (!token) return null
   try {
-    return jwt.verify(token, JWT_SECRET) as { userId: string; role: string }
+    const decoded = jwt.verify(token, JWT_SECRET) as any
+    return {
+      userId: decoded.userId || decoded.id,
+      role: decoded.role || 'USER'
+    }
   } catch {
     return null
   }
