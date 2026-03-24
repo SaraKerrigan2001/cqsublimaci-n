@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,21 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  phone     String?
-  password  String
-  role      String   @default("USER") // "USER" or "ADMIN"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relaciones
-  orders    Order[]
-  designs   Design[]
+  id            String             @id @default(cuid())
+  email         String             @unique
+  name          String?
+  password      String
+  role          String             @default("USER")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  phone         String?
+  cart          Cart?
   conversations ChatConversation[]
-  quotations Quotation[]
-  cart      Cart?
+  designs       Design[]
+  orders        Order[]
+  quotations    Quotation[]
 
   @@map("users")
 }
@@ -36,67 +31,59 @@ model Category {
   description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  // Relaciones
-  products Product[]
+  products    Product[]
 
   @@map("categories")
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
   description String?
   price       Float
   image       String?
   categoryId  String
-  isActive    Boolean  @default(true)
-  isFeatured  Boolean  @default(false)
-  likes       Int      @default(0)
-  rating      Float    @default(5.0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  category   Category    @relation(fields: [categoryId], references: [id])
-  orderItems OrderItem[]
-  cartItems  CartItem[]
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isFeatured  Boolean     @default(false)
+  likes       Int         @default(0)
+  rating      Float       @default(5.0)
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  category    Category    @relation(fields: [categoryId], references: [id])
 
   @@map("products")
 }
 
 model Design {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
   description String?
   imageUrl    String
   userId      String
-  isPublic    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  user       User        @relation(fields: [userId], references: [id])
-  orderItems OrderItem[]
+  isPublic    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id])
+  orderItems  OrderItem[]
 
   @@map("designs")
 }
 
 model Order {
-  id          String   @id @default(cuid())
-  userId      String
-  total       Float
-  status      String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "CANCELLED"
-  customerName String
+  id            String      @id @default(cuid())
+  userId        String
+  total         Float
+  status        String      @default("PENDING")
+  customerName  String
   customerEmail String
   customerPhone String?
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relaciones
-  user       User        @relation(fields: [userId], references: [id])
-  orderItems OrderItem[]
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  orderItems    OrderItem[]
+  user          User        @relation(fields: [userId], references: [id])
 
   @@map("orders")
 }
@@ -109,70 +96,63 @@ model OrderItem {
   quantity  Int
   price     Float
   createdAt DateTime @default(now())
-
-  // Relaciones
-  order   Order   @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-  design  Design? @relation(fields: [designId], references: [id])
+  design    Design?  @relation(fields: [designId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 
   @@map("order_items")
 }
 
 model ChatConversation {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   userId    String
-  status    String   @default("OPEN") // "OPEN", "CLOSED"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user     User          @relation(fields: [userId], references: [id])
-  messages ChatMessage[]
+  status    String        @default("OPEN")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  user      User          @relation(fields: [userId], references: [id])
+  messages  ChatMessage[]
 
   @@map("chat_conversations")
 }
 
 model ChatMessage {
-  id             String   @id @default(cuid())
+  id             String           @id @default(cuid())
   conversationId String
   senderId       String
-  senderRole     String   // "USER" or "ADMIN"
+  senderRole     String
   content        String
-  read           Boolean  @default(false)
-  createdAt      DateTime @default(now())
-
-  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+  read           Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id])
 
   @@map("chat_messages")
 }
 
 model Quotation {
-  id                String   @id @default(cuid())
-  fullName          String
-  email             String
-  whatsapp          String?
-  targetOrCompany   String?
-  clientType        String?
-  urgency           String   @default("Normal (2-3 semanas)")
-  description       String
-  status            String   @default("PENDING") // "PENDING", "IN_PROGRESS", "COMPLETED", "CANCELADA"
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  userId            String?
-
-  // Relaciones
-  user User? @relation(fields: [userId], references: [id])
+  id              String   @id @default(cuid())
+  fullName        String
+  email           String
+  whatsapp        String?
+  targetOrCompany String?
+  clientType      String?
+  urgency         String   @default("Normal (2-3 semanas)")
+  description     String
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
 
   @@map("quotations")
 }
 
 model Cart {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   items     CartItem[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("carts")
 }
@@ -184,9 +164,8 @@ model CartItem {
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("cart_items")
 }
